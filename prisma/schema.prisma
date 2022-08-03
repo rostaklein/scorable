@@ -6,12 +6,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Game {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
@@ -19,7 +19,7 @@ model Game {
 }
 
 model Player {
-  id        String   @id @default(cuid())
+  id        String   @id @default(cuid()) @map("_id")
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
