@@ -6,7 +6,10 @@ export async function getGames() {
 }
 
 export async function getGame(gameId: string) {
-  return db.game.findUnique({ where: { id: gameId } });
+  return db.game.findUnique({
+    where: { id: gameId },
+    include: { players: {} },
+  });
 }
 
 export async function createGame(game: Pick<Game, "name">) {

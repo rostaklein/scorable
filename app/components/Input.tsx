@@ -1,26 +1,37 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 type Props = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 > & {
-  label: string;
+  label?: string;
   name: string;
   error?: string | null;
+  initialValue?: string;
 };
 
-export const Input: React.FC<Props> = ({ label, name, error, ...rest }) => {
+export const Input: React.FC<Props> = ({
+  label,
+  name,
+  error,
+  initialValue,
+  ...rest
+}) => {
+  const [val, setVal] = useState<string>(initialValue ?? "");
   return (
     <div>
-      <label
-        htmlFor={name}
-        className={twMerge(
-          "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300",
-          error && "text-red-700"
-        )}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          htmlFor={name}
+          className={twMerge(
+            "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300",
+            error && "text-red-700"
+          )}
+        >
+          {label}
+        </label>
+      )}
       <input
         type="text"
         id={name}
@@ -32,6 +43,8 @@ export const Input: React.FC<Props> = ({ label, name, error, ...rest }) => {
         )}
         name={name}
         placeholder={label}
+        onChange={(e) => setVal(e.target.value)}
+        value={val}
         {...rest}
       />
 
