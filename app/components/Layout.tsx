@@ -17,9 +17,9 @@ export const Layout: React.FC<Props> = ({
   ...rest
 }) => {
   return (
-    <div className="container mx-auto px-4" {...rest}>
-      <div className="flex items-center">
-        <h1 className="my-6 text-3xl font-bold mr-6">{title}</h1>
+    <div className="container mx-auto px-4 lg:my-0 my-3" {...rest}>
+      <div className="flex items-center flex-wrap mb-4">
+        <h1 className="lg:my-6 my-3 text-3xl font-bold mr-6">{title}</h1>
         {cta}
       </div>
       {breadcrumbs && (
