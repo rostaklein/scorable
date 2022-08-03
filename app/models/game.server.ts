@@ -12,3 +12,7 @@ export async function getGame(gameId: string) {
 export async function createGame(game: Pick<Game, "name">) {
   return db.game.create({ data: game });
 }
+
+export async function deleteGame(gameId: string) {
+  return db.game.delete({ where: { id: gameId } });
+}
