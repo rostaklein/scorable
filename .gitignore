@@ -12,3 +12,6 @@ node_modules
 /api/
 
 /app/tailwind.css
+
+/prisma/dev.db
+.env
