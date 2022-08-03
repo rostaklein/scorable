@@ -1,6 +1,6 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, Link, useActionData } from "@remix-run/react";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { Layout } from "~/components/Layout";
@@ -36,7 +36,10 @@ export default function NewGameRoute() {
           <Input name="name" label="Game name" error={errors?.name}></Input>
         </div>
         <div>
-          <Button>Add</Button>
+          <Button color="green">Add</Button>
+          <Link to="/games" className="ml-2">
+            <Button type="button">Back</Button>
+          </Link>
         </div>
       </Form>
     </Layout>

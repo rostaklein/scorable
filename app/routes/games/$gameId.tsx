@@ -37,7 +37,28 @@ export default function GameRoute() {
   const { game } = useLoaderData<LoaderData>();
 
   return (
-    <Layout title={`Game: ${game?.name}`}>
+    <Layout
+      title={`Game: ${game?.name}`}
+      breadcrumbs={[
+        {
+          label: `Game: ${game?.name}`,
+          to: `/games/${game?.id}`,
+        },
+      ]}
+      cta={
+        <Form
+          method="delete"
+          onSubmit={(e) => {
+            if (!confirm("Are you sure?")) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <input type="hidden" value={game?.id} name="id" />
+          <Button size="small">Delete</Button>
+        </Form>
+      }
+    >
       <div className="grid grid-flow-col auto-cols-max gap-6">
         <div>
           <Timeline
@@ -56,10 +77,6 @@ export default function GameRoute() {
             )}
           />
         </div>
-        <Form method="delete">
-          <input type="hidden" value={game?.id} name="id" />
-          <Button size="small">Delete</Button>
-        </Form>
       </div>
     </Layout>
   );
