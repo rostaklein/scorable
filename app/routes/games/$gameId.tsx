@@ -10,7 +10,7 @@ import { GameStatusBadge } from "~/components/GameStatusBadge";
 import { Input } from "~/components/Input";
 import { Layout } from "~/components/Layout";
 import { getGame, deleteGame } from "~/models/game.server";
-import { addPlayer, deletePlayer, updatePlayer } from "~/models/player.server";
+import { addTeam, deleteTeam, updateTeam } from "~/models/team.server";
 import { relativeTimeFromDates } from "~/utils/relativeTimeFormat";
 
 type LoaderData = {
@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const intent = formData.get("intent");
 
-  const playerId = formData.get("playerId");
+  const teamId = formData.get("teamId");
   const gameId = formData.get("gameId");
 
   switch (intent) {
@@ -48,8 +48,8 @@ export const action: ActionFunction = async ({ request }) => {
         return redirect("/");
       }
     }
-    case "add-player":
-    case "update-player": {
+    case "add-team":
+    case "update-team": {
       const name = formData.get("name");
       if (!isValidString(name)) {
         return json<ActionData>({
@@ -57,19 +57,19 @@ export const action: ActionFunction = async ({ request }) => {
         });
       }
       switch (intent) {
-        case "add-player":
+        case "add-team":
           if (isValidString(gameId)) {
-            return await addPlayer(gameId, { name });
+            return await addTeam(gameId, { name });
           }
-        case "update-player":
-          if (isValidString(playerId)) {
-            return await updatePlayer(playerId, { name });
+        case "update-team":
+          if (isValidString(teamId)) {
+            return await updateTeam(teamId, { name });
           }
       }
     }
-    case "remove-player": {
-      if (isValidString(playerId)) {
-        await deletePlayer(playerId);
+    case "remove-team": {
+      if (isValidString(teamId)) {
+        await deleteTeam(teamId);
       }
     }
     default:
@@ -79,7 +79,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function GameRoute() {
   const { game } = useLoaderData<LoaderData>();
-  const [newPlayerName, setNewPlayerName] = useState("");
+  const [newTeamName, setNewTeamName] = useState("");
 
   if (!game) {
     return null;
@@ -128,30 +128,30 @@ export default function GameRoute() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <div>
-          {game?.players.length === 0 && (
+          {game?.teams.length === 0 && (
             <div className="text-center text-gray-400 text-sm p-3">
               No teams yet
             </div>
           )}
-          {game?.players.map((player) => (
+          {game?.teams.map((team) => (
             <Form
               className="flex items-end mb-2 w-full"
               method="post"
-              key={player.id}
+              key={team.id}
             >
               <Input
                 name="name"
                 placeholder="Cool guys"
-                initialValue={player.name}
+                initialValue={team.name}
                 className="h-10"
                 wrapperClassname="flex-1"
               />
-              <input type="hidden" value={player?.id} name="playerId" />
+              <input type="hidden" value={team?.id} name="teamId" />
               <div className="ml-3 flex">
                 <Button
                   className="mr-3 h-10"
                   name="intent"
-                  value="update-player"
+                  value="update-team"
                   size="small"
                 >
                   Update
@@ -159,7 +159,7 @@ export default function GameRoute() {
                 <Button
                   size="small"
                   name="intent"
-                  value="remove-player"
+                  value="remove-team"
                   className="h-10"
                   onClick={(e) => {
                     if (!confirm("Are you sure?")) {
@@ -176,13 +176,13 @@ export default function GameRoute() {
           <Form
             className="flex items-end mb-2 w-full"
             method="post"
-            onSubmit={() => setNewPlayerName("")}
+            onSubmit={() => setNewTeamName("")}
           >
             <Input
               name="name"
               placeholder="Cool guys"
-              value={newPlayerName}
-              onChange={(e) => setNewPlayerName(e.target.value)}
+              value={newTeamName}
+              onChange={(e) => setNewTeamName(e.target.value)}
               className="h-10"
               wrapperClassname="flex-1"
             />
@@ -192,7 +192,7 @@ export default function GameRoute() {
                 color="green"
                 className="h-10 w-32 flex-nowrap"
                 name="intent"
-                value="add-player"
+                value="add-team"
               >
                 <HiPlus className="inline-block" /> Add
               </Button>

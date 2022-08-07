@@ -15,7 +15,7 @@ model Game {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   name      String
-  players   Player[]
+  teams     Team[]
   rounds    Round[]
   status    GameStatus
 }
@@ -26,7 +26,7 @@ enum GameStatus {
   FINISHED
 }
 
-model Player {
+model Team {
   id        String   @id @default(cuid()) @map("_id")
   name      String
   createdAt DateTime @default(now())
@@ -50,10 +50,10 @@ model Round {
 model Score {
   id        String   @id @default(cuid()) @map("_id")
   points    Int
-  player    Player   @relation(fields: [playerId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
   round     Round    @relation(fields: [roundId], references: [id])
-  playerId  String
   roundId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  teamId    String
 }
