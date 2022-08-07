@@ -46,24 +46,15 @@ export const Badge: React.FC<Props> = ({
   };
 
   return (
-    <>
-      <div
-        role="tooltip"
-        className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 shadow-sm opacity-0 tooltip"
-      >
-        Tooltip content
-        <div className="tooltip-arrow" data-popper-arrow></div>
-      </div>
-      <span
-        className={twMerge(
-          getColor(),
-          "inline-flex my-1 items-center space-x-1",
-          className
-        )}
-        {...rest}
-      >
-        {children}
-      </span>
-    </>
+    <span
+      className={twMerge(
+        getColor(),
+        "inline-flex my-1 items-center space-x-1",
+        className
+      )}
+      {...rest}
+    >
+      {children}
+    </span>
   );
 };

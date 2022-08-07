@@ -6,6 +6,7 @@ import { useState } from "react";
 import { HiCalendar, HiOutlineTrash, HiPlus } from "react-icons/hi";
 import { Badge } from "~/components/Badge";
 import { Button } from "~/components/Button";
+import { GameStatusBadge } from "~/components/GameStatusBadge";
 import { Input } from "~/components/Input";
 import { Layout } from "~/components/Layout";
 import { getGame, deleteGame } from "~/models/game.server";
@@ -80,6 +81,10 @@ export default function GameRoute() {
   const { game } = useLoaderData<LoaderData>();
   const [newPlayerName, setNewPlayerName] = useState("");
 
+  if (!game) {
+    return null;
+  }
+
   return (
     <Layout
       title={`Game: ${game?.name}`}
@@ -110,7 +115,7 @@ export default function GameRoute() {
         </Form>
       }
     >
-      <div className="mb-4">
+      <div className="mb-4 flex space-x-1">
         <Badge
           title={`Created on: ${new Date(
             game?.createdAt ?? 0
@@ -119,6 +124,7 @@ export default function GameRoute() {
           <HiCalendar />
           <span>{relativeTimeFromDates(new Date(game?.createdAt ?? 0))}</span>
         </Badge>
+        <GameStatusBadge status={game?.status} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <div>
