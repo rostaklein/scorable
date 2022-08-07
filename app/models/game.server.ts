@@ -2,7 +2,11 @@ import type { Game } from "@prisma/client";
 import { db } from "~/utils/db.server";
 
 export async function getGames() {
-  return db.game.findMany();
+  return db.game.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
 }
 
 export async function getGame(gameId: string) {
