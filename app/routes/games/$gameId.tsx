@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
     case "delete-game": {
       if (isValidString(gameId)) {
         await deleteGame(gameId);
-        return redirect("/games");
+        return redirect("/");
       }
     }
     case "add-player":

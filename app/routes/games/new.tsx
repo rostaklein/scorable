@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   await createGame({ name });
 
-  return redirect("/games");
+  return redirect("/");
 };
 
 export default function NewGameRoute() {
@@ -37,7 +37,7 @@ export default function NewGameRoute() {
         </div>
         <div>
           <Button color="green">Add</Button>
-          <Link to="/games" className="ml-2">
+          <Link to="/" className="ml-2">
             <Button type="button">Back</Button>
           </Link>
         </div>

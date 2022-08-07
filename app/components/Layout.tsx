@@ -28,7 +28,7 @@ export const Layout: React.FC<Props> = ({
             <>
               <li className="inline-flex items-center">
                 <Link
-                  to="/games"
+                  to="/"
                   className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 >
                   <svg
