@@ -15,3 +15,5 @@ node_modules
 
 /prisma/dev.db
 .env
+
+/public/entry.worker.js

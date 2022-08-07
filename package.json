@@ -2,7 +2,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "npm-run-all -p build:*",
+    "build": "npm-run-all -s build:css build:worker build:remix",
     "build:css": "npm run generate:css -- --minify",
     "build:remix": "cross-env NODE_ENV=production remix build",
     "dev": "npm-run-all -p dev:*",
@@ -44,6 +44,6 @@
     "@types/node-persist": "^3.1.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   }
 }
