@@ -11,11 +11,19 @@ datasource db {
 }
 
 model Game {
-  id        String   @id @default(cuid()) @map("_id")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid()) @map("_id")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   name      String
   players   Player[]
+  rounds    Round[]
+  status    GameStatus
+}
+
+enum GameStatus {
+  PREPARING
+  IN_PROGRESS
+  FINISHED
 }
 
 model Player {
@@ -25,4 +33,27 @@ model Player {
   updatedAt DateTime @updatedAt
   Game      Game?    @relation(fields: [gameId], references: [id])
   gameId    String?
+  Score     Score[]
+}
+
+model Round {
+  id         String   @id @default(cuid()) @map("_id")
+  order      Int
+  createdAt  DateTime @default(now())
+  startedAt  DateTime
+  finishedAt DateTime
+  Game       Game?    @relation(fields: [gameId], references: [id])
+  gameId     String?
+  Score      Score[]
+}
+
+model Score {
+  id        String   @id @default(cuid()) @map("_id")
+  points    Int
+  player    Player   @relation(fields: [playerId], references: [id])
+  round     Round    @relation(fields: [roundId], references: [id])
+  playerId  String
+  roundId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
