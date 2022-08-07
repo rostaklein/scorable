@@ -3,12 +3,14 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import { HiOutlineTrash, HiPlus, HiTrash } from "react-icons/hi";
+import { HiCalendar, HiOutlineTrash, HiPlus } from "react-icons/hi";
+import { Badge } from "~/components/Badge";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { Layout } from "~/components/Layout";
 import { getGame, deleteGame } from "~/models/game.server";
 import { addPlayer, deletePlayer, updatePlayer } from "~/models/player.server";
+import { relativeTimeFromDates } from "~/utils/relativeTimeFormat";
 
 type LoaderData = {
   game: Awaited<ReturnType<typeof getGame>>;
@@ -108,6 +110,16 @@ export default function GameRoute() {
         </Form>
       }
     >
+      <div className="mb-4">
+        <Badge
+          title={`Created on: ${new Date(
+            game?.createdAt ?? 0
+          ).toLocaleString()}`}
+        >
+          <HiCalendar />
+          <span>{relativeTimeFromDates(new Date(game?.createdAt ?? 0))}</span>
+        </Badge>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <div>
           {game?.players.length === 0 && (
