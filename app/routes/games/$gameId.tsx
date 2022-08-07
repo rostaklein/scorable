@@ -110,6 +110,11 @@ export default function GameRoute() {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <div>
+          {game?.players.length === 0 && (
+            <div className="text-center text-gray-400 text-sm p-3">
+              No teams yet
+            </div>
+          )}
           {game?.players.map((player) => (
             <Form
               className="flex items-end mb-2 w-full"
