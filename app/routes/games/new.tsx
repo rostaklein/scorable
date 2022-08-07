@@ -1,6 +1,7 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
+import { HiChevronLeft, HiPlus } from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { Layout } from "~/components/Layout";
@@ -36,10 +37,15 @@ export default function NewGameRoute() {
           <Input name="name" label="Game name" error={errors?.name}></Input>
         </div>
         <div>
-          <Button color="green">Add</Button>
-          <Link to="/" className="ml-2">
-            <Button type="button">Back</Button>
+          <Link to="/">
+            <Button type="button">
+              <HiChevronLeft className="inline-block -ml-1 mr-2" />
+              Back
+            </Button>
           </Link>
+          <Button color="green" className="ml-2">
+            <HiPlus className="inline-block -ml-1 mr-2" /> Add
+          </Button>
         </div>
       </Form>
     </Layout>

@@ -50,7 +50,7 @@ export const action: ActionFunction = async ({ request }) => {
       const name = formData.get("name");
       if (!isValidString(name)) {
         return json<ActionData>({
-          name: "Player name is required",
+          name: "Team name is required",
         });
       }
       switch (intent) {

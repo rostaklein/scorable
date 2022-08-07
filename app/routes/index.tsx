@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { HiPlus } from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Layout } from "~/components/Layout";
 
@@ -22,8 +23,8 @@ export default function GamesIndexRoute() {
       title="All games"
       cta={
         <Link to={"/games/new"}>
-          <Button size="small" color="green">
-            Add new game
+          <Button color="green">
+            <HiPlus className="inline-block" /> Add new game
           </Button>
         </Link>
       }
