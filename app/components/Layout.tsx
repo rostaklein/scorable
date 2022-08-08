@@ -57,7 +57,7 @@ export const Layout: React.FC<Props> = ({
               <li className="inline-flex items-center">
                 <Link
                   to="/"
-                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white truncate"
+                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 truncate"
                 >
                   <HiHome className="w-4 h-4 mr-2" />
                   All games
@@ -69,7 +69,7 @@ export const Layout: React.FC<Props> = ({
                     <HiChevronRight className="w-6 h-6 text-gray-400" />
                     <Link
                       to={item.to}
-                      className="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 dark:text-gray-400 dark:hover:text-white truncate"
+                      className="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2 truncate"
                     >
                       {item.label}
                     </Link>
