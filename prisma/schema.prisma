@@ -37,12 +37,12 @@ model Team {
 }
 
 model Round {
-  id         String   @id @default(cuid()) @map("_id")
+  id         String    @id @default(cuid()) @map("_id")
   order      Int
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
   startedAt  DateTime
-  finishedAt DateTime
-  Game       Game?    @relation(fields: [gameId], references: [id])
+  finishedAt DateTime?
+  Game       Game?     @relation(fields: [gameId], references: [id])
   gameId     String?
   Score      Score[]
 }

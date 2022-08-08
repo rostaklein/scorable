@@ -4,20 +4,33 @@ import { db } from "~/utils/db.server";
 export async function getGames() {
   return db.game.findMany({
     orderBy: {
-      createdAt: "desc"
-    }
+      createdAt: "desc",
+    },
   });
 }
 
 export async function getGame(gameId: string) {
   return db.game.findUnique({
     where: { id: gameId },
-    include: { teams: {} },
+    include: { teams: {}, rounds: {} },
   });
 }
 
 export async function createGame(game: Pick<Game, "name">) {
   return db.game.create({ data: { ...game, status: "PREPARING" } });
+}
+
+export async function startGame(gameId: string) {
+  return db.game.update({
+    data: {
+      status: "IN_PROGRESS",
+      rounds: { create: { order: 1, startedAt: new Date() } },
+    },
+    where: { id: gameId },
+    include: {
+      rounds: {}
+    }
+  });
 }
 
 export async function updateGame(

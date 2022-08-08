@@ -1,7 +1,7 @@
 import type { ActionFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { deleteGame, updateGame } from "~/models/game.server";
+import { deleteGame, startGame } from "~/models/game.server";
 import { addTeam, deleteTeam, updateTeam } from "~/models/team.server";
 
 export type ActionData = {
@@ -29,8 +29,8 @@ export const action: ActionFunction = async ({ request }) => {
     }
     case "start-game": {
       if (isValidString(gameId)) {
-        await updateGame(gameId, { status: "IN_PROGRESS" });
-        return null;
+        const game = await startGame(gameId);
+        return redirect(`/games/${gameId}/rounds/${game.rounds[0].order}`)
       }
     }
     case "add-team":

@@ -3,6 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { HiPlus } from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Layout } from "~/components/Layout";
+import { Outlet } from "@remix-run/react";
 
 import { getGames } from "~/models/game.server";
 
@@ -38,6 +39,7 @@ export default function GamesIndexRoute() {
           </li>
         ))}
       </ul>
+      <Outlet />
     </Layout>
   );
 }

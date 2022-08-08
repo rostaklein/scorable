@@ -9,6 +9,7 @@ import { Layout } from "~/components/Layout";
 import { TeamsList } from "~/features/TeamsList";
 import { getGame } from "~/models/game.server";
 import { relativeTimeFromDates } from "~/utils/relativeTimeFormat";
+import { Outlet } from "@remix-run/react";
 
 export { action } from "~/actions/game";
 
@@ -34,12 +35,7 @@ export default function GameRoute() {
   return (
     <Layout
       title={`Game: ${game?.name}`}
-      breadcrumbs={[
-        {
-          label: `Game: ${game?.name}`,
-          to: `/games/${game?.id}`,
-        },
-      ]}
+      displayBreadcrumbs
       cta={
         <div className="flex space-x-2 my-3 w-full md:w-auto">
           {game.status === "PREPARING" && game.teams.length > 0 && (
@@ -91,6 +87,7 @@ export default function GameRoute() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <TeamsList teams={game.teams} gameId={game.id} />
+        <Outlet />
       </div>
     </Layout>
   );
