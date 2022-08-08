@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { HiCalendar, HiOutlineTrash } from "react-icons/hi";
+import { HiArrowRight, HiCalendar, HiOutlineTrash } from "react-icons/hi";
 import { Badge } from "~/components/Badge";
 import { Button } from "~/components/Button";
 import { GameStatusBadge } from "~/components/GameStatusBadge";
@@ -41,24 +41,41 @@ export default function GameRoute() {
         },
       ]}
       cta={
-        <Form
-          method="delete"
-          onSubmit={(e) => {
-            if (!confirm("Are you sure?")) {
-              e.preventDefault();
-            }
-          }}
-        >
-          <input type="hidden" value={game?.id} name="gameId" />
-          <Button
-            size="small"
-            name="intent"
-            value="delete-game"
-            className="h-10"
+        <div className="flex space-x-2 my-3 w-full md:w-auto">
+          {game.status === "PREPARING" && game.teams.length > 0 && (
+            <Form method="post" className="flex flex-1">
+              <input type="hidden" value={game?.id} name="gameId" />
+              <Button
+                size="small"
+                color="green"
+                name="intent"
+                value="start-game"
+                className="h-10 space-x-2 flex-1 px-6"
+              >
+                <span>Start game</span>
+                <HiArrowRight className="inline-block" />
+              </Button>
+            </Form>
+          )}
+          <Form
+            method="delete"
+            onSubmit={(e) => {
+              if (!confirm("Are you sure?")) {
+                e.preventDefault();
+              }
+            }}
           >
-            <HiOutlineTrash className="text-[16px]" />
-          </Button>
-        </Form>
+            <input type="hidden" value={game?.id} name="gameId" />
+            <Button
+              size="small"
+              name="intent"
+              value="delete-game"
+              className="h-10"
+            >
+              <HiOutlineTrash className="text-[16px]" />
+            </Button>
+          </Form>
+        </div>
       }
     >
       <div className="mb-4 flex space-x-1">

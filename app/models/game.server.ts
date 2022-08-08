@@ -22,7 +22,7 @@ export async function createGame(game: Pick<Game, "name">) {
 
 export async function updateGame(
   gameId: string,
-  game: Pick<Game, "name" | "status">
+  game: Partial<Pick<Game, "name" | "status">>
 ) {
   return db.game.update({ data: game, where: { id: gameId } });
 }

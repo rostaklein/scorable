@@ -17,7 +17,7 @@ export const Button: React.FC<Props> = ({
     <button
       type="submit"
       className={twMerge(
-        "font-medium rounded-lg text-sm transition-all",
+        "font-medium rounded-lg text-sm transition-all h-10",
         size === "regular" && "text-sm px-5 py-2",
         size === "small" && "text-sm px-3 py-1.5",
         color === "regular" &&
