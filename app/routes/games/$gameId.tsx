@@ -13,7 +13,7 @@ import { Outlet } from "@remix-run/react";
 
 export { action } from "~/actions/game";
 
-type LoaderData = {
+export type LoaderData = {
   game: Awaited<ReturnType<typeof getGame>>;
 };
 
@@ -85,9 +85,13 @@ export default function GameRoute() {
         </Badge>
         <GameStatusBadge status={game?.status} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <TeamsList teams={game.teams} gameId={game.id} />
-        <Outlet />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="row-start-2 md:row-start-1">
+          <TeamsList teams={game.teams} gameId={game.id} />
+        </div>
+        <div className="row-start-1">
+          <Outlet />
+        </div>
       </div>
     </Layout>
   );

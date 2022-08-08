@@ -15,7 +15,8 @@ let isMount = true;
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Pub Quiz Score",
-  viewport: "width=device-width,initial-scale=1",
+  viewport:
+    "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no",
 });
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];

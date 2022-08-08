@@ -13,7 +13,7 @@ type Props = {
 export const TeamsList: React.FC<Props> = ({ teams, gameId }) => {
   const [newTeamName, setNewTeamName] = useState("");
   return (
-    <div>
+    <>
       {teams.length === 0 && (
         <div className="text-center text-gray-400 text-sm p-3">
           No teams yet
@@ -84,6 +84,6 @@ export const TeamsList: React.FC<Props> = ({ teams, gameId }) => {
           </Button>
         </div>
       </Form>
-    </div>
+    </>
   );
 };
