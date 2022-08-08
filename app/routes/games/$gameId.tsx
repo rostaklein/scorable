@@ -53,24 +53,6 @@ export default function GameRoute() {
               </Button>
             </Form>
           )}
-          <Form
-            method="delete"
-            onSubmit={(e) => {
-              if (!confirm("Are you sure?")) {
-                e.preventDefault();
-              }
-            }}
-          >
-            <input type="hidden" value={game?.id} name="gameId" />
-            <Button
-              size="small"
-              name="intent"
-              value="delete-game"
-              className="h-10"
-            >
-              <HiOutlineTrash className="text-[16px]" />
-            </Button>
-          </Form>
         </div>
       }
     >
@@ -87,9 +69,10 @@ export default function GameRoute() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="row-start-2 md:row-start-1">
+          <h2 className="font-bold text-lg mb-2">Teams</h2>
           <TeamsList teams={game.teams} gameId={game.id} />
         </div>
-        <div className="row-start-1">
+        <div className="row-start-1 md:col-span-2">
           <Outlet />
         </div>
       </div>
