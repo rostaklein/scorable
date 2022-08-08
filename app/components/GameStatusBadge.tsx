@@ -4,29 +4,30 @@ import { Badge } from "./Badge";
 
 type Props = {
   status: GameStatus;
+  className?: string;
 };
 
-export const GameStatusBadge: React.FC<Props> = ({ status, children }) => {
+export const GameStatusBadge: React.FC<Props> = ({ status, className }) => {
   switch (status) {
     case "PREPARING":
       return (
         <Badge color="blue">
           <HiIdentification />
-          <span>Preparing</span>
+          <span className={className}>Preparing</span>
         </Badge>
       );
     case "IN_PROGRESS":
       return (
         <Badge color="yellow">
           <HiRefresh />
-          <span>In Progress</span>
+          <span className={className}>In Progress</span>
         </Badge>
       );
     case "FINISHED":
       return (
         <Badge color="green">
           <HiCheck />
-          <span>Finished</span>
+          <span className={className}>Finished</span>
         </Badge>
       );
 
