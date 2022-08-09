@@ -3,13 +3,10 @@ import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { deleteGame, startGame } from "~/models/game.server";
 import { addTeam, deleteTeam, updateTeam } from "~/models/team.server";
+import { isValidString } from "~/utils/isValidString";
 
 export type ActionData = {
   name: null | string;
-};
-
-const isValidString = (value: unknown): value is string => {
-  return typeof value === "string" || value !== "";
 };
 
 export const action: ActionFunction = async ({ request }) => {
