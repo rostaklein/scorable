@@ -48,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
       if (
         isValidString(roundId) &&
         isValidString(teamId) &&
-        (isValidString(scoreId) || scoreId === undefined)
+        isValidString(scoreId)
       ) {
         await updateScore(teamId, roundId, Number(points), scoreId);
         return null;
@@ -123,6 +123,7 @@ export default function RoundRoute() {
                   formData.append("teamId", team.id);
                   formData.append("roundId", round.id);
                   formData.append("points", value);
+                  formData.append("intent", "update-score");
 
                   submit(formData, { method: "post", replace: true });
                 }}
