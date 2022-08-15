@@ -45,8 +45,12 @@ export const action: ActionFunction = async ({ request }) => {
 
   switch (intent) {
     case "update-score": {
-      if (isValidString(roundId) && isValidString(teamId)) {
-        await updateScore(teamId, roundId, scoreId, Number(points));
+      if (
+        isValidString(roundId) &&
+        isValidString(teamId) &&
+        (isValidString(scoreId) || scoreId === undefined)
+      ) {
+        await updateScore(teamId, roundId, Number(points), scoreId);
         return null;
       }
     }
@@ -106,7 +110,7 @@ export default function RoundRoute() {
               <Input
                 name="points"
                 placeholder="Score"
-                className="w-16"
+                className="w-16 appearance-none"
                 type="number"
                 initialValue={team.Score[0]?.points.toString()}
                 min="0"
@@ -115,7 +119,7 @@ export default function RoundRoute() {
                 onDebouncedValueChange={(value) => {
                   const formData = new FormData();
 
-                  formData.append("scoreId", team.Score[0].id);
+                  formData.append("scoreId", team.Score[0]?.id);
                   formData.append("teamId", team.id);
                   formData.append("roundId", round.id);
                   formData.append("points", value);

@@ -13,8 +13,8 @@ export async function getRound(gameId: string, order: number) {
 export async function updateScore(
   teamId: string,
   roundId: string,
-  scoreId: string,
-  points: number
+  points: number,
+  scoreId?: string,
 ) {
   return db.round.update({
     where: {
