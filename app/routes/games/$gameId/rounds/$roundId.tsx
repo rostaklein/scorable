@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
@@ -7,18 +7,13 @@ import {
   useSubmit,
   useTransition,
 } from "@remix-run/react";
-import {
-  HiArrowCircleRight,
-  HiArrowRight,
-  HiCheck,
-  HiChevronLeft,
-} from "react-icons/hi";
+import { HiArrowRight, HiCheck, HiChevronLeft } from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
-import { getRound, updateScore } from "~/models/round.server";
-import type { ActionFunction } from "@remix-run/node";
+import { getRound, startNextRound, updateScore } from "~/models/round.server";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { isValidString } from "~/utils/isValidString";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "~/components/Spinner";
 
 type LoaderData = {
@@ -42,6 +37,7 @@ export const action: ActionFunction = async ({ request }) => {
   const roundId = formData.get("roundId");
   const scoreId = formData.get("scoreId");
   const points = formData.get("points");
+  const lastRoundId = formData.get("lastRoundId");
 
   switch (intent) {
     case "update-score": {
@@ -52,6 +48,12 @@ export const action: ActionFunction = async ({ request }) => {
       ) {
         await updateScore(teamId, roundId, Number(points), scoreId);
         return null;
+      }
+    }
+    case "start-next-round": {
+      if (isValidString(lastRoundId)) {
+        const newRound = await startNextRound(lastRoundId);
+        return redirect(`/games/${newRound.gameId}/rounds/${newRound.order}`);
       }
     }
     default:
@@ -90,9 +92,12 @@ export default function RoundRoute() {
           <HiChevronLeft />
         </Link>
         <h2 className="font-bold text-lg inline-block">Round #{round.order}</h2>
-        <Button>
-          Next round <HiArrowRight className="inline-block ml-2" />
-        </Button>
+        <Form method="post">
+          <input type="hidden" value={round.id} name="lastRoundId" />
+          <Button type="submit" name="intent" value="start-next-round">
+            Next round <HiArrowRight className="inline-block ml-2" />
+          </Button>
+        </Form>
       </div>
       <div>
         {round.Game?.teams.map((team, i) => (

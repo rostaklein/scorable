@@ -22,14 +22,16 @@ export default function GamesIndex() {
         {shouldDisplayRounds && (
           <>
             <h2 className="font-bold text-lg mb-2">Rounds</h2>
-            {game.rounds.map((round) => (
-              <Link
-                key={round.id}
-                to={`/games/${game.id}/rounds/${round.order}`}
-              >
-                <Button>{round.order}</Button>
-              </Link>
-            ))}
+            <div className="space-x-2">
+              {game.rounds.map((round) => (
+                <Link
+                  key={round.id}
+                  to={`/games/${game.id}/rounds/${round.order}`}
+                >
+                  <Button>{round.order}</Button>
+                </Link>
+              ))}
+            </div>
           </>
         )}
       </div>

@@ -10,11 +10,30 @@ export async function getRound(gameId: string, order: number) {
   });
 }
 
+export async function startNextRound(lastRoundId: string) {
+  const round = await db.round.findUnique({
+    where: { id: lastRoundId },
+    include: { Game: {} },
+  });
+
+  if (!round) {
+    throw new Error("Could not find the last round");
+  }
+
+  return db.round.create({
+    data: {
+      order: round.order + 1,
+      startedAt: new Date(),
+      Game: { connect: { id: round.Game?.id } },
+    },
+  });
+}
+
 export async function updateScore(
   teamId: string,
   roundId: string,
   points: number,
-  scoreId?: string,
+  scoreId?: string
 ) {
   return db.round.update({
     where: {
