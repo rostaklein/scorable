@@ -31,8 +31,8 @@ model Team {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Game      Game?    @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  gameId    String?
+  Game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId    String
   Score     Score[]
 }
 
@@ -42,8 +42,8 @@ model Round {
   createdAt  DateTime  @default(now())
   startedAt  DateTime
   finishedAt DateTime?
-  Game       Game?     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  gameId     String?
+  Game       Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId     String
   Score      Score[]
 }
 

@@ -28,7 +28,10 @@ export const Input: React.FC<Props> = ({
   const debouncedValue = useDebounce(val);
 
   useEffect(() => {
-    onDebouncedValueChange && onDebouncedValueChange(debouncedValue);
+    if (!onDebouncedValueChange || val === initialValue || val === "") {
+      return;
+    }
+    onDebouncedValueChange(debouncedValue);
   }, [debouncedValue]);
 
   return (

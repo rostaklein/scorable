@@ -103,7 +103,7 @@ export default function RoundRoute() {
         {round.Game?.teams.map((team, i) => (
           <div
             className="flex justify-between align-center h-10 mb-2"
-            key={team.id}
+            key={`${team.id}#${team.Score[0]?.id}`}
           >
             <div className="flex items-center pr-3 flex-1 overflow-x-auto whitespace-nowrap">
               {team.name}
