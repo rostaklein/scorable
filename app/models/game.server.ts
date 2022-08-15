@@ -16,7 +16,7 @@ export async function getGame(gameId: string) {
   });
 }
 
-export async function createGame(game: Pick<Game, "name">) {
+export async function createGame(game: Pick<Game, "name" | "urlIdentifier">) {
   return db.game.create({ data: { ...game, status: "PREPARING" } });
 }
 
