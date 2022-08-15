@@ -53,7 +53,9 @@ export const action: ActionFunction = async ({ request }) => {
     case "start-next-round": {
       if (isValidString(lastRoundId)) {
         const newRound = await startNextRound(lastRoundId);
-        return redirect(`/games/${newRound.gameId}/rounds/${newRound.order}`);
+        return redirect(
+          `/games/${newRound.Game.urlIdentifier}/rounds/${newRound.order}`
+        );
       }
     }
     default:
@@ -86,7 +88,7 @@ export default function RoundRoute() {
     <div className="col-span-2 max-w-md">
       <div className=" mb-4 flex items-center justify-between">
         <Link
-          to={`/games/${round.gameId}`}
+          to={`/games/${round.Game.urlIdentifier}`}
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-gray-200 rounded-md mr-2 -mt-0.5 transition-all"
         >
           <HiChevronLeft />

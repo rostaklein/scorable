@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   const game = await createGame({ name });
 
-  return redirect(`/games/${game.id}`);
+  return redirect(`/games/${game.urlIdentifier}`);
 };
 
 export default function NewGameRoute() {

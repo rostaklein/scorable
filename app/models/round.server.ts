@@ -2,7 +2,7 @@ import { db } from "~/utils/db.server";
 
 export async function getRound(gameId: string, order: number) {
   return db.round.findFirst({
-    where: { gameId, order },
+    where: { order, Game: { OR: [{ id: gameId }, { urlIdentifier: gameId }] } },
     include: {
       Score: {},
       Game: {
@@ -39,6 +39,7 @@ export async function startNextRound(lastRoundId: string) {
       startedAt: new Date(),
       Game: { connect: { id: round.Game?.id } },
     },
+    include: { Game: {} },
   });
 }
 

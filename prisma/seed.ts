@@ -18,21 +18,23 @@ seed();
 function getGames() {
   const chance = new Chance();
 
-  return Array.from({ length: 10 }).map(
-    (_, i) =>
-      ({
-        name: `Test game #${i + 1} - ${chance.word({capitalize: true})}`,
-        createdAt: new Date(new Date().getTime() - i),
-        status: GameStatus.PREPARING,
-        teams: {
-          createMany: {
-            data: Array.from({ length: chance.integer({ min: 2, max: 10 }) }).map(
-              () => ({
-                  name: `${chance.word({capitalize: true})} ${chance.animal()}`,
-              })
-            )
-          }
+  return Array.from({ length: 10 }).map((_, i) => {
+    const chanceWord = chance.word({ capitalize: true });
+    const name = `Test game #${i + 1} - ${chanceWord}`;
+    return {
+      name,
+      createdAt: new Date(new Date().getTime() - i),
+      urlIdentifier: encodeURIComponent(chanceWord.toLowerCase()),
+      status: GameStatus.PREPARING,
+      teams: {
+        createMany: {
+          data: Array.from({ length: chance.integer({ min: 2, max: 10 }) }).map(
+            () => ({
+              name: `${chance.word({ capitalize: true })} ${chance.animal()}`,
+            })
+          ),
         },
-      } as Prisma.GameCreateInput)
-  );
+      },
+    } as Prisma.GameCreateInput;
+  });
 }

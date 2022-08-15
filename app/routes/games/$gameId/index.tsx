@@ -26,7 +26,7 @@ export default function GamesIndex() {
               {game.rounds.map((round) => (
                 <Link
                   key={round.id}
-                  to={`/games/${game.id}/rounds/${round.order}`}
+                  to={`/games/${game.urlIdentifier}/rounds/${round.order}`}
                 >
                   <Button>{round.order}</Button>
                 </Link>

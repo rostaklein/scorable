@@ -10,8 +10,8 @@ export async function getGames() {
 }
 
 export async function getGame(gameId: string) {
-  return db.game.findUnique({
-    where: { id: gameId },
+  return db.game.findFirst({
+    where: { OR: [{ urlIdentifier: gameId }, { id: gameId }] },
     include: { teams: {}, rounds: {} },
   });
 }
@@ -28,8 +28,8 @@ export async function startGame(gameId: string) {
     },
     where: { id: gameId },
     include: {
-      rounds: {}
-    }
+      rounds: {},
+    },
   });
 }
 

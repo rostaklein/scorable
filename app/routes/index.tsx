@@ -37,7 +37,7 @@ export default function GamesIndexRoute() {
         {games.map((game) => (
           <Link
             key={game.id}
-            to={`/games/${game.id}`}
+            to={`/games/${game.urlIdentifier}`}
             className="block odd:bg-gray-100/30 odd:border-y py-3 px-4 -mx-4 sm:mx-0 sm:py-1 hover:bg-gray-100 transition-all"
           >
             <li className="grid grid-cols-4 gap-2">

@@ -27,7 +27,7 @@ export const action: ActionFunction = async ({ request }) => {
     case "start-game": {
       if (isValidString(gameId)) {
         const game = await startGame(gameId);
-        return redirect(`/games/${gameId}/rounds/${game.rounds[0].order}`)
+        return redirect(`/games/${game.urlIdentifier}/rounds/${game.rounds[0].order}`)
       }
     }
     case "add-team":

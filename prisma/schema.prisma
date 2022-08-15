@@ -11,13 +11,14 @@ datasource db {
 }
 
 model Game {
-  id        String     @id @default(cuid()) @map("_id")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  name      String
-  teams     Team[]
-  rounds    Round[]
-  status    GameStatus
+  id            String     @id @default(cuid()) @map("_id")
+  urlIdentifier String     @unique @default(cuid())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  name          String
+  teams         Team[]
+  rounds        Round[]
+  status        GameStatus
 }
 
 enum GameStatus {
