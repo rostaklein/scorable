@@ -1,12 +1,14 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData, useTransition } from "@remix-run/react";
 import { HiCheck, HiChevronLeft } from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { getRound, updateScore } from "~/models/round.server";
 import type { ActionFunction } from "@remix-run/node";
 import { isValidString } from "~/utils/isValidString";
+import { useEffect, useState } from "react";
+import { Spinner } from "~/components/Spinner";
 
 type LoaderData = {
   round: Awaited<ReturnType<typeof getRound>>;
@@ -44,12 +46,22 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function RoundRoute() {
   const { round } = useLoaderData<LoaderData>();
+  const transition = useTransition();
+  const [teamIdScoreLoading, setTeamIdScoreLoading] = useState<string | null>(
+    null
+  );
 
+  useEffect(() => {
+    const teamId = transition.submission?.formData.get("teamId");
+    if (teamId && typeof teamId === "string") {
+      setTeamIdScoreLoading(teamId);
+    } else {
+      setTeamIdScoreLoading(null);
+    }
+  }, [transition]);
   if (!round) {
     return null;
   }
-
-  console.log({ round });
 
   return (
     <div className="col-span-2">
@@ -90,7 +102,13 @@ export default function RoundRoute() {
                 value="update-score"
                 size="small"
               >
-                <HiCheck className="text-[18px]" />
+                <div className="h-5 w-5">
+                  {teamIdScoreLoading === team.id ? (
+                    <Spinner />
+                  ) : (
+                    <HiCheck className="text-[18px]" />
+                  )}
+                </div>
               </Button>
             </Form>
           </div>
