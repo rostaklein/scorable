@@ -45,7 +45,7 @@ export const Layout: React.FC<Props> = ({
   };
 
   return (
-    <div className="container mx-auto px-4 lg:my-0 my-3" {...rest}>
+    <div className="container mx-auto px-4 pb-8 md:pb-4 lg:my-0 my-3" {...rest}>
       <div className="flex items-center flex-wrap mb-4 justify-between md:justify-start">
         <h1 className="lg:my-6 my-3 text-3xl font-bold mr-6">{title}</h1>
         {cta}
