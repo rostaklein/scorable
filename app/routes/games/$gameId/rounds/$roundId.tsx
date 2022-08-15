@@ -1,13 +1,24 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, useLoaderData, useTransition } from "@remix-run/react";
-import { HiCheck, HiChevronLeft } from "react-icons/hi";
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useSubmit,
+  useTransition,
+} from "@remix-run/react";
+import {
+  HiArrowCircleRight,
+  HiArrowRight,
+  HiCheck,
+  HiChevronLeft,
+} from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { getRound, updateScore } from "~/models/round.server";
 import type { ActionFunction } from "@remix-run/node";
 import { isValidString } from "~/utils/isValidString";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Spinner } from "~/components/Spinner";
 
 type LoaderData = {
@@ -50,6 +61,7 @@ export default function RoundRoute() {
   const [teamIdScoreLoading, setTeamIdScoreLoading] = useState<string | null>(
     null
   );
+  const submit = useSubmit();
 
   useEffect(() => {
     const teamId = transition.submission?.formData.get("teamId");
@@ -59,23 +71,27 @@ export default function RoundRoute() {
       setTeamIdScoreLoading(null);
     }
   }, [transition]);
+
   if (!round) {
     return null;
   }
 
   return (
-    <div className="col-span-2">
-      <h2 className="font-bold text-lg mb-2 flex align-center">
+    <div className="col-span-2 max-w-md">
+      <div className=" mb-4 flex items-center justify-between">
         <Link
           to={`/games/${round.gameId}`}
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-gray-200 rounded-md mr-2 -mt-0.5 transition-all"
         >
           <HiChevronLeft />
         </Link>
-        <span className="inline-block">Round #{round.order}</span>
-      </h2>
-      <div className="max-w-md">
-        {round.Game?.teams.map((team) => (
+        <h2 className="font-bold text-lg inline-block">Round #{round.order}</h2>
+        <Button>
+          Next round <HiArrowRight className="inline-block ml-2" />
+        </Button>
+      </div>
+      <div>
+        {round.Game?.teams.map((team, i) => (
           <div
             className="flex justify-between align-center h-10 mb-2"
             key={team.id}
@@ -91,7 +107,21 @@ export default function RoundRoute() {
                 name="points"
                 placeholder="Score"
                 className="w-16"
+                type="number"
                 initialValue={team.Score[0]?.points.toString()}
+                min="0"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                onDebouncedValueChange={(value) => {
+                  const formData = new FormData();
+
+                  formData.append("scoreId", team.Score[0].id);
+                  formData.append("teamId", team.id);
+                  formData.append("roundId", round.id);
+                  formData.append("points", value);
+
+                  submit(formData, { method: "post", replace: true });
+                }}
               />
               <input type="hidden" value={team.Score[0]?.id} name="scoreId" />
               <input type="hidden" value={team.id} name="teamId" />

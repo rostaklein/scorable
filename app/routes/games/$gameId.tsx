@@ -37,7 +37,7 @@ export default function GameRoute() {
       title={`Game: ${game?.name}`}
       displayBreadcrumbs
       cta={
-        <div className="flex space-x-2 my-3 w-full md:w-auto">
+        <>
           {game.status === "PREPARING" && game.teams.length > 0 && (
             <Form method="post" className="flex flex-1">
               <input type="hidden" value={game?.id} name="gameId" />
@@ -53,7 +53,7 @@ export default function GameRoute() {
               </Button>
             </Form>
           )}
-        </div>
+        </>
       }
     >
       <div className="mb-4 flex space-x-1">

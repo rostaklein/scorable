@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { useDebounce } from "~/hooks/useDebounce";
 
 type Props = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -10,6 +11,7 @@ type Props = React.DetailedHTMLProps<
   error?: string | null;
   initialValue?: string;
   wrapperClassname?: string;
+  onDebouncedValueChange?: (val: string) => void;
 };
 
 export const Input: React.FC<Props> = ({
@@ -19,9 +21,16 @@ export const Input: React.FC<Props> = ({
   initialValue,
   className,
   wrapperClassname,
+  onDebouncedValueChange,
   ...rest
 }) => {
   const [val, setVal] = useState<string>(initialValue ?? "");
+  const debouncedValue = useDebounce(val);
+
+  useEffect(() => {
+    onDebouncedValueChange && onDebouncedValueChange(debouncedValue);
+  }, [debouncedValue]);
+
   return (
     <div className={wrapperClassname}>
       {label && (
