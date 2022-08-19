@@ -4,15 +4,15 @@ import type { LoaderFunction } from "@remix-run/node";
 export let loader: LoaderFunction = () => {
   return json(
     {
-      short_name: "PQS",
-      name: "Pub Quiz Score",
+      short_name: "Scorable",
+      name: "scorable.online",
       start_url: "/",
       display: "standalone",
       theme_color: "#ffffff",
       background_color: "#ffffff",
       shortcuts: [
         {
-          name: "Pub Quiz Score",
+          name: "Scorable",
           url: "/",
           icons: [
             {

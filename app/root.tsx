@@ -14,7 +14,7 @@ import styles from "./tailwind.css";
 let isMount = true;
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Pub Quiz Score",
+  title: "scorable.online",
   viewport:
     "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no",
 });
