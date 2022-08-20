@@ -1,9 +1,11 @@
 import { db } from "~/utils/db.server";
 
-type ScoreAfterRound = {
+export type ScoreAfterRound = {
   teamId: string;
   teamName: string;
   totalPoints: number;
+  scoreFromLatestRound: number;
+  scoreFromPreviousRounds: number;
   place: "gold" | "silver" | "bronze" | null;
 };
 
@@ -38,10 +40,20 @@ export async function getScoreAfterNthRound(
         },
       },
     },
+    include: {
+      round: {
+        select: { order: true },
+      },
+    },
   });
 
+  const scoresFromLatestRound = new Map<string, number>();
+
   const scoreMap = scores.reduce((acc, curr) => {
-    acc.set(curr.teamId, acc.get(curr.teamId) ?? 0 + curr.points);
+    acc.set(curr.teamId, (acc.get(curr.teamId) ?? 0) + curr.points);
+    if(curr.round.order === roundOrder){
+      scoresFromLatestRound.set(curr.teamId, curr.points);
+    }
     return acc;
   }, new Map<string, number>());
 
@@ -51,11 +63,13 @@ export async function getScoreAfterNthRound(
   });
 
   const scoreWithoutPlace: ScoreAfterRound[] = teams
-    .map((team) => ({
+    .map((team): ScoreAfterRound => ({
       teamId: team.id,
       teamName: team.name,
       totalPoints: scoreMap.get(team.id) ?? 0,
       place: null,
+      scoreFromLatestRound: scoresFromLatestRound.get(team.id) ?? 0,
+      scoreFromPreviousRounds: (scoreMap.get(team.id) ?? 0) - (scoresFromLatestRound.get(team.id) ?? 0)
     }))
     .sort((a, b) => b.totalPoints - a.totalPoints);
 

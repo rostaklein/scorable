@@ -1,14 +1,14 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import React, { Fragment, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import React, { useState } from "react";
 import { getScoreAfterNthRound } from "~/models/score.server";
 import { RiTeamFill } from "react-icons/ri";
 import { Button } from "~/components/Button";
 import { Transition } from "@headlessui/react";
 import { HiChevronLeft, HiMinus, HiPlus } from "react-icons/hi";
-import { FaTrophy } from "react-icons/fa";
+import { GrDocumentMissing } from "react-icons/gr";
+import { ScoreBar } from "~/components/Bar";
 
 type LoaderData = Awaited<ReturnType<typeof getScoreAfterNthRound>>;
 
@@ -63,11 +63,16 @@ export const RoundResults: React.FC = () => {
     setShownTeams(teamsWithoutLatest);
   };
 
+  const hasScoreToShow = score.some((s) => s.scoreFromLatestRound);
+
   return (
-    <div className="container mx-auto py-4 px-4 pb-8 min-h-screen flex flex-col justify-between">
-      <div className="flex space-x-6 justify-between items-center">
+    <div className="container mx-auto py-4 px-4 pb-8 min-h-screen flex flex-col">
+      <div
+        className="grid items-center"
+        style={{ gridTemplateColumns: "1fr 1fr 1fr" }}
+      >
         <Link to={`/games/${game?.urlIdentifier}/rounds/${roundOrder}`}>
-          <Button>
+          <Button size="small" className="h-9">
             <HiChevronLeft className="inline-block" /> Back
           </Button>
         </Link>
@@ -81,75 +86,78 @@ export const RoundResults: React.FC = () => {
             </span>
           </h2>
         </div>
-        <div className="space-x-2">
-          <Button onClick={() => onShowNext()} disabled={!canShowMore}>
+        <div className="space-x-2 flex justify-end">
+          <Button
+            onClick={() => onShowNext()}
+            disabled={!canShowMore}
+            size="small"
+            className="h-9"
+          >
             <HiPlus className="inline-block mr-1" />
             <RiTeamFill className="inline-block mr-2 text-lg" />
             <span>Show Next</span>
           </Button>
-          <Button onClick={() => onShowLess()} disabled={!canShowLess}>
+          <Button
+            onClick={() => onShowLess()}
+            disabled={!canShowLess}
+            size="small"
+            className="h-9"
+          >
             <HiMinus className="inline-block" />
           </Button>
         </div>
       </div>
-      <ol className="flex flex-1 justify-between space-x-6 mt-6">
-        {score.map((s, i) => (
-          <li
-            key={`${s.teamId}${s.totalPoints}`}
-            className="grid grid-rows-2 mb-6 flex-1"
-            style={{ gridTemplateRows: "1fr 60px" }}
-          >
-            <div className="flex justify-end flex-col items-center">
+      {hasScoreToShow ? (
+        <ol className="flex flex-1 justify-between space-x-6 mt-6">
+          {score.map((s, i) => (
+            <li
+              key={`${s.teamId}${s.totalPoints}`}
+              className="grid grid-rows-2 mb-6 flex-1"
+              style={{ gridTemplateRows: "1fr 90px" }}
+            >
               <Transition
-                as={Fragment}
+                className={"flex justify-end flex-col items-center"}
                 show={shownTeams.includes(i)}
                 enter="transition-all duration-1000 origin-bottom"
                 enterFrom="scale-y-0"
                 enterTo="scale-y-100"
+                leave="transition-opacity duration-250"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <ScoreBar {...s} maxScore={maxScore} showTotals={false} />
+              </Transition>
+              <Transition
+                show={shownTeams.includes(i)}
+                enter="transition-opacity duration-500"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
                 leave="transition-opacity duration-150"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div
-                  className={twMerge(
-                    "bg-slate-100 flex justify-center items-center px-6 rounded-sm flex-col",
-                    s.place === "bronze" && "bg-amber-800/40",
-                    s.place === "silver" && "bg-slate-300",
-                    s.place === "gold" && "bg-amber-400"
-                  )}
-                  style={{
-                    height: `${(s.totalPoints / maxScore) * 100}%`,
-                  }}
-                >
-                  {s.place !== null && (
-                    <div>
-                      <FaTrophy />
-                    </div>
-                  )}
-                  <div className="font-bold text-xl">{s.totalPoints}</div>
-                </div>
+                <h3 className="font-bold text-center text-2xl mt-6 flex items-center justify-center flex-col">
+                  <span className="font-normal text-sm text-gray-500 flex items-center">
+                    <RiTeamFill className="mr-1" />
+                    team
+                  </span>
+                  <span>{s.teamName}</span>
+                </h3>
               </Transition>
-            </div>
-            <Transition
-              show={shownTeams.includes(i)}
-              enter="transition-opacity duration-500"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity duration-150"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <h3 className="font-bold text-center text-2xl mt-6 flex items-center justify-center flex-col">
-                <span className="font-normal text-sm text-gray-500 flex items-center">
-                  <RiTeamFill className="mr-1" />
-                  team
-                </span>
-                <span>{s.teamName}</span>
-              </h3>
-            </Transition>
-          </li>
-        ))}
-      </ol>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div className="my-12 text-center text-gray-400 text-sm">
+          <GrDocumentMissing className="inline-block text-2xl opacity-50 mb-4" />
+          <div>There are no scores recorded for round #{roundOrder}.</div>
+          <Link to={`/games/${game?.urlIdentifier}`}>
+            <Button size="small" className="h-9 mt-6">
+              <HiChevronLeft className="inline-block" /> Back to all rounds
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
