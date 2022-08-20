@@ -11,6 +11,7 @@ export const Button: React.FC<Props> = ({
   size = "regular",
   color = "regular",
   className,
+  disabled,
   ...rest
 }) => {
   return (
@@ -24,8 +25,10 @@ export const Button: React.FC<Props> = ({
           "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200",
         color === "green" &&
           "focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-600",
+        disabled && "opacity-60 cursor-not-allowed hover:bg-inherit",
         className
       )}
+      disabled={disabled}
       {...rest}
     >
       {children}
