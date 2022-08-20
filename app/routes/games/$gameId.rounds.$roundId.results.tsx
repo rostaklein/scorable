@@ -67,7 +67,7 @@ export const RoundResults: React.FC = () => {
 
   return (
     <div className="container mx-auto py-4 px-4 pb-8 min-h-screen flex flex-col justify-between">
-      <div className="flex space-x-6 justify-between">
+      <div className="flex space-x-6 justify-between items-center">
         <Link to={`/games/${game?.urlIdentifier}/rounds/${roundOrder}`}>
           <Button>
             <HiChevronLeft className="inline-block" /> Back
@@ -75,7 +75,7 @@ export const RoundResults: React.FC = () => {
         </Link>
         <div className="text-center">
           <h2 className="text-sm text-gray-400">{game?.name}</h2>
-          <h2 className="font-bold">
+          <h2 className="font-bold text-2xl">
             after{" "}
             <span>
               {roundOrder}
@@ -133,7 +133,7 @@ export const RoundResults: React.FC = () => {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <h3 className="font-bold text-center text-xl mt-6 flex items-center justify-center flex-col">
+              <h3 className="font-bold text-center text-2xl mt-6 flex items-center justify-center flex-col">
                 <span className="font-normal text-sm text-gray-500 flex items-center">
                   <RiTeamFill className="mr-1" />
                   team
