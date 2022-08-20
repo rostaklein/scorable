@@ -9,6 +9,16 @@ type Props = ScoreAfterRound & {
   showTotals: boolean;
 };
 
+export const getBgColorByPlace = (place: ScoreAfterRound["place"]) => {
+  const placeClassName = twMerge(
+    place === "bronze" && "bg-amber-200",
+    place === "silver" && "bg-slate-300",
+    place === "gold" && "bg-amber-400"
+  );
+
+  return placeClassName;
+};
+
 export const ScoreBar: React.FC<Props> = ({
   place,
   maxScore,
@@ -20,11 +30,8 @@ export const ScoreBar: React.FC<Props> = ({
   const baseClassName = twMerge(
     "bg-slate-200 flex justify-center items-center px-6 flex-col"
   );
-  const placeClassName = twMerge(
-    place === "bronze" && "bg-amber-200",
-    place === "silver" && "bg-slate-300",
-    place === "gold" && "bg-amber-400"
-  );
+
+  const placeClassName = getBgColorByPlace(place);
 
   const hasPreviousScore = scoreFromPreviousRounds > 0;
 

@@ -1,14 +1,15 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import React, { useState } from "react";
+import { Link, useLoaderData, useMatches } from "@remix-run/react";
+import React, { useEffect, useState } from "react";
 import { getScoreAfterNthRound } from "~/models/score.server";
 import { RiTeamFill } from "react-icons/ri";
 import { Button } from "~/components/Button";
 import { Transition } from "@headlessui/react";
-import { HiChevronLeft, HiMinus, HiPlus } from "react-icons/hi";
+import { HiChevronLeft, HiChevronRight, HiMinus, HiPlus } from "react-icons/hi";
 import { GrDocumentMissing } from "react-icons/gr";
-import { ScoreBar } from "~/components/Bar";
+import { getBgColorByPlace, ScoreBar } from "~/components/Bar";
+import { twMerge } from "tailwind-merge";
 
 type LoaderData = Awaited<ReturnType<typeof getScoreAfterNthRound>>;
 
@@ -28,7 +29,10 @@ function nth(n: number) {
 }
 
 export const RoundResults: React.FC = () => {
-  const { game, roundOrder, score } = useLoaderData<LoaderData>();
+  const { game, roundOrder, score, prevRound, nextRound } =
+    useLoaderData<LoaderData>();
+
+  const matches = useMatches();
 
   const maxScore = Math.max(...score.map(({ totalPoints }) => totalPoints));
 
@@ -43,6 +47,11 @@ export const RoundResults: React.FC = () => {
 
   const canShowMore = nextTeamToShow >= 0;
   const canShowLess = shownTeams.length > 0;
+
+  useEffect(() => {
+    // clear on reroute
+    setShownTeams([]);
+  }, [matches]);
 
   const onShowNext = () => {
     if (!canShowMore) {
@@ -64,6 +73,7 @@ export const RoundResults: React.FC = () => {
   };
 
   const hasScoreToShow = score.some((s) => s.scoreFromLatestRound);
+  const isLastRound = !nextRound;
 
   return (
     <div className="container mx-auto py-4 px-4 pb-8 min-h-screen flex flex-col">
@@ -76,15 +86,45 @@ export const RoundResults: React.FC = () => {
             <HiChevronLeft className="inline-block" /> Back
           </Button>
         </Link>
-        <div className="text-center">
-          <h2 className="text-sm text-gray-400">{game?.name}</h2>
-          <h2 className="font-bold text-2xl">
-            after{" "}
-            <span>
-              {roundOrder}
-              {nth(roundOrder)} round
-            </span>
-          </h2>
+        <div className="flex justify-center items-center group space-x-4">
+          <Link
+            to={`/games/${game?.urlIdentifier}/rounds/${prevRound?.order}/results`}
+            className={twMerge(!prevRound && "pointer-events-none")}
+          >
+            <Button
+              size="small"
+              className={twMerge(
+                "h-9 opacity-0",
+                prevRound && "group-hover:opacity-100 transition-opacity"
+              )}
+            >
+              <HiChevronLeft />
+            </Button>
+          </Link>
+          <div>
+            <h2 className="text-sm text-gray-400">{game?.name}</h2>
+            <h2 className="font-bold text-2xl">
+              after{" "}
+              <span>
+                {roundOrder}
+                {nth(roundOrder)} round
+              </span>
+            </h2>
+          </div>
+          <Link
+            to={`/games/${game?.urlIdentifier}/rounds/${nextRound?.order}/results`}
+            className={twMerge(!nextRound && "pointer-events-none")}
+          >
+            <Button
+              size="small"
+              className={twMerge(
+                "h-9 opacity-0",
+                nextRound && "group-hover:opacity-100 transition-opacity"
+              )}
+            >
+              <HiChevronRight />
+            </Button>
+          </Link>
         </div>
         <div className="space-x-2 flex justify-end">
           <Button
@@ -125,7 +165,7 @@ export const RoundResults: React.FC = () => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <ScoreBar {...s} maxScore={maxScore} showTotals={false} />
+                <ScoreBar {...s} maxScore={maxScore} showTotals={isLastRound} />
               </Transition>
               <Transition
                 show={shownTeams.includes(i)}
@@ -141,7 +181,20 @@ export const RoundResults: React.FC = () => {
                     <RiTeamFill className="mr-1" />
                     team
                   </span>
-                  <span>{s.teamName}</span>
+                  <span className="mt-1">
+                    <span
+                      className={twMerge(
+                        isLastRound && getBgColorByPlace(s.place),
+                        isLastRound && s.place ? "text-black" : "text-gray-500",
+                        isLastRound &&
+                          s.place &&
+                          "w-10 h-10 rounded-full inline-flex justify-center items-center mr-2 pl-1"
+                      )}
+                    >
+                      {i + 1}.{" "}
+                    </span>
+                    {s.teamName}
+                  </span>
                 </h3>
               </Transition>
             </li>

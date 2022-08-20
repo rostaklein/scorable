@@ -90,5 +90,13 @@ export async function getScoreAfterNthRound(
     },
   });
 
-  return { score, game, roundOrder };
+  const prevRound = await db.round.findFirst({
+    where: {Game: {OR: [{urlIdentifier: gameId}, {id: gameId}]}, order: roundOrder - 1}
+  })
+
+  const nextRound = await db.round.findFirst({
+    where: {Game: {OR: [{urlIdentifier: gameId}, {id: gameId}]}, order: roundOrder + 1}
+  })
+
+  return { score, game, roundOrder, prevRound, nextRound };
 }
