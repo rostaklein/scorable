@@ -1,13 +1,19 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import React, { Fragment, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { getScoreAfterNthRound } from "~/models/score.server";
 import { RiTeamFill } from "react-icons/ri";
 import { Button } from "~/components/Button";
 import { Transition } from "@headlessui/react";
-import { HiArrowLeft, HiArrowRight, HiMinus, HiPlus } from "react-icons/hi";
+import {
+  HiArrowLeft,
+  HiArrowRight,
+  HiChevronLeft,
+  HiMinus,
+  HiPlus,
+} from "react-icons/hi";
 
 type LoaderData = Awaited<ReturnType<typeof getScoreAfterNthRound>>;
 
@@ -62,10 +68,13 @@ export const RoundResults: React.FC = () => {
   return (
     <div className="container mx-auto py-4 px-4 pb-8 min-h-screen flex flex-col justify-between">
       <div className="flex space-x-6 justify-between">
-        <div>
-          <h2 className="text-sm text-gray-400">
-            Results for game {game?.name}
-          </h2>
+        <Link to={`/games/${game?.urlIdentifier}/rounds/${roundOrder}`}>
+          <Button>
+            <HiChevronLeft className="inline-block" /> Back
+          </Button>
+        </Link>
+        <div className="text-center">
+          <h2 className="text-sm text-gray-400">{game?.name}</h2>
           <h2 className="font-bold">
             after{" "}
             <span>
@@ -76,8 +85,9 @@ export const RoundResults: React.FC = () => {
         </div>
         <div className="space-x-2">
           <Button onClick={() => onShowNext()} disabled={!canShowMore}>
-            <HiPlus className="inline-block mr-2" />
-            <span>show next</span>
+            <HiPlus className="inline-block mr-1" />
+            <RiTeamFill className="inline-block mr-2 text-lg" />
+            <span>Show Next</span>
           </Button>
           <Button onClick={() => onShowLess()} disabled={!canShowLess}>
             <HiMinus className="inline-block" />

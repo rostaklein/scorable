@@ -7,7 +7,12 @@ import {
   useSubmit,
   useTransition,
 } from "@remix-run/react";
-import { HiArrowRight, HiCheck, HiChevronLeft } from "react-icons/hi";
+import {
+  HiArrowRight,
+  HiChartBar,
+  HiCheck,
+  HiChevronLeft,
+} from "react-icons/hi";
 import { Button } from "~/components/Button";
 import { Input } from "~/components/Input";
 import { getRound, startNextRound, updateScore } from "~/models/round.server";
@@ -84,9 +89,11 @@ export default function RoundRoute() {
     return null;
   }
 
+  const canShowResults = round.Game.teams.some(({ Score }) => Score.length > 0);
+
   return (
     <div className="col-span-2 max-w-md">
-      <div className=" mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between">
         <Link
           to={`/games/${round.Game.urlIdentifier}`}
           className="h-8 w-8 inline-flex items-center justify-center hover:bg-gray-200 rounded-md mr-2 -mt-0.5 transition-all"
@@ -101,6 +108,13 @@ export default function RoundRoute() {
           </Button>
         </Form>
       </div>
+      <Link
+        to={`/games/${round.Game.urlIdentifier}/rounds/${round.order}/results`}
+      >
+        <Button className="w-full mb-4" disabled={!canShowResults}>
+          <HiChartBar className="inline-block mr-2" /> Show results
+        </Button>
+      </Link>
       <div>
         {round.Game?.teams.map((team, i) => (
           <div
@@ -143,6 +157,7 @@ export default function RoundRoute() {
                 name="intent"
                 value="update-score"
                 size="small"
+                tabIndex={-1}
               >
                 <div className="h-5 w-5">
                   {teamIdScoreLoading === team.id ? (

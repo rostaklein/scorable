@@ -28,7 +28,7 @@ export default function GamesIndex() {
                   key={round.id}
                   to={`/games/${game.urlIdentifier}/rounds/${round.order}`}
                 >
-                  <Button>{round.order}</Button>
+                  <Button>#{round.order}</Button>
                 </Link>
               ))}
             </div>
