@@ -7,13 +7,8 @@ import { getScoreAfterNthRound } from "~/models/score.server";
 import { RiTeamFill } from "react-icons/ri";
 import { Button } from "~/components/Button";
 import { Transition } from "@headlessui/react";
-import {
-  HiArrowLeft,
-  HiArrowRight,
-  HiChevronLeft,
-  HiMinus,
-  HiPlus,
-} from "react-icons/hi";
+import { HiChevronLeft, HiMinus, HiPlus } from "react-icons/hi";
+import { FaTrophy } from "react-icons/fa";
 
 type LoaderData = Awaited<ReturnType<typeof getScoreAfterNthRound>>;
 
@@ -38,6 +33,9 @@ export const RoundResults: React.FC = () => {
   const maxScore = Math.max(...score.map(({ totalPoints }) => totalPoints));
 
   const [shownTeams, setShownTeams] = useState<number[]>([]);
+  // const [shownTeams, setShownTeams] = useState<number[]>(
+  //   score.map((_, i) => i)
+  // );
 
   const lastShownTeam = shownTeams[shownTeams.length - 1] ?? null;
   const nextTeamToShow =
@@ -114,12 +112,20 @@ export const RoundResults: React.FC = () => {
               >
                 <div
                   className={twMerge(
-                    "bg-slate-200 flex justify-center items-center px-6 rounded-sm"
+                    "bg-slate-100 flex justify-center items-center px-6 rounded-sm flex-col",
+                    s.place === "bronze" && "bg-amber-800/40",
+                    s.place === "silver" && "bg-slate-300",
+                    s.place === "gold" && "bg-amber-400"
                   )}
                   style={{
                     height: `${(s.totalPoints / maxScore) * 100}%`,
                   }}
                 >
+                  {s.place !== null && (
+                    <div>
+                      <FaTrophy />
+                    </div>
+                  )}
                   <div className="font-bold text-xl">{s.totalPoints}</div>
                 </div>
               </Transition>

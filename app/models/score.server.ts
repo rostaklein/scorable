@@ -1,11 +1,28 @@
 import { db } from "~/utils/db.server";
-import { getGame } from "./game.server";
-import { getRound } from "./round.server";
 
 type ScoreAfterRound = {
   teamId: string;
   teamName: string;
   totalPoints: number;
+  place: "gold" | "silver" | "bronze" | null;
+};
+
+const getPlace = (
+  pts: number,
+  topThree: [number, number, number]
+): ScoreAfterRound["place"] => {
+  const [gold, silver, bronze] = topThree;
+
+  switch (pts) {
+    case gold:
+      return "gold";
+    case silver:
+      return "silver";
+    case bronze:
+      return "bronze";
+    default:
+      return null;
+  }
 };
 
 export async function getScoreAfterNthRound(
@@ -33,13 +50,25 @@ export async function getScoreAfterNthRound(
     select: { id: true, name: true },
   });
 
-  const score: ScoreAfterRound[] = teams
+  const scoreWithoutPlace: ScoreAfterRound[] = teams
     .map((team) => ({
       teamId: team.id,
       teamName: team.name,
       totalPoints: scoreMap.get(team.id) ?? 0,
+      place: null,
     }))
     .sort((a, b) => b.totalPoints - a.totalPoints);
+
+  const uniqueScores = [
+    ...new Set(scoreWithoutPlace.map(({ totalPoints }) => totalPoints)),
+  ];
+
+  const [goldPoints, silverPoints, bronzePoints] = uniqueScores;
+
+  const score = scoreWithoutPlace.map((s) => ({
+    ...s,
+    place: getPlace(s.totalPoints, [goldPoints, silverPoints, bronzePoints]),
+  }));
 
   const game = await db.game.findFirst({
     where: {
